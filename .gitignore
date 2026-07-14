@@ -5,8 +5,16 @@
 !python-refresher/
 !python-refresher/**
 
+!rag-pdf-project/
+!rag-pdf-project/**
+
 # Un-ignore this .gitignore itself
 !.gitignore
 
-!rag-pdf-project/
-!rag-pdf-project/**
+# Re-ignore artifacts that should never be committed
+**/.DS_Store
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/.claude/
+**/faiss_index/
