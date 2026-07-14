@@ -18,3 +18,4 @@
 **/*.pyo
 **/.claude/
 **/faiss_index/
+**/*.zip
