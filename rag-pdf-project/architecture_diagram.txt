@@ -1,0 +1,97 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        RAG PIPELINE ARCHITECTURE                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+ ┌─────────────────────────────────────────────────────────────────────────┐
+ │  PHASE 1 — INDEX BUILD  (runs once, results saved to disk)              │
+ └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────┐
+  │  PDF Files       │  network_security_manual.pdf
+  │  (local disk)    │  climate_change_report.pdf
+  │                  │  ml_fundamentals_guide.pdf
+  └────────┬─────────┘
+           │ PyPDFLoader
+           ▼
+  ┌──────────────────┐
+  │  Document Pages  │  one Document object per page
+  │  + metadata      │  (source filename, page number)
+  └────────┬─────────┘
+           │ RecursiveCharacterTextSplitter
+           │ (chunk_size=500, overlap=50)
+           ▼
+  ┌──────────────────┐
+  │  Text Chunks     │  ~50–200 chunks across all PDFs
+  │  (strings)       │
+  └────────┬─────────┘
+           │
+           │  ┌─────────────────────────────────────────┐
+           ├─►│  OpenAI API CALL 1 — Embeddings         │
+           │  │  model : text-embedding-3-small          │
+           │  │  input : all chunk texts (batched)       │
+           │  │  output: 1,536-dim float vectors         │
+           │  └──────────────────┬──────────────────────┘
+           │                     │
+           ▼                     ▼
+  ┌───────────────────────────────────┐
+  │  FAISS Index (local)              │
+  │  · vector → chunk mapping         │
+  │  · saved to faiss_index/ on disk  │
+  └───────────────────────────────────┘
+
+
+ ┌─────────────────────────────────────────────────────────────────────────┐
+ │  PHASE 2 — QUERY  (runs on every user question)                         │
+ └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────┐
+  │  User Question   │  e.g. "What is the role of a firewall?"
+  └────────┬─────────┘
+           │
+           │  ┌─────────────────────────────────────────┐
+           ├─►│  OpenAI API CALL 2 — Embeddings         │
+           │  │  model : text-embedding-3-small          │
+           │  │  input : user question (single string)   │
+           │  │  output: 1,536-dim float vector          │
+           │  └──────────────────┬──────────────────────┘
+           │                     │ query vector
+           │                     ▼
+           │           ┌──────────────────┐
+           │           │  FAISS (local)   │  cosine similarity search
+           │           │  similarity      │  no API call — runs on CPU
+           │           │  search (k=3)    │
+           │           └────────┬─────────┘
+           │                    │ top 3 matching chunks
+           │                    │ + source metadata
+           │                    ▼
+           │           ┌──────────────────┐
+           └──────────►│  ChatPromptTemplate
+                        │  Injects:        │
+                        │  · {context}     │ ← retrieved chunks
+                        │  · {question}    │ ← original question
+                        └────────┬─────────┘
+                                 │ formatted prompt
+                                 ▼
+                  ┌──────────────────────────────────────┐
+                  │  OpenAI API CALL 3 — Chat Completion │
+                  │  model : gpt-4o-mini                  │
+                  │  input : prompt (context + question)  │
+                  │  output: natural language answer      │
+                  └──────────────────┬───────────────────┘
+                                     │ StrOutputParser
+                                     ▼
+                           ┌──────────────────┐
+                           │  Answer          │
+                           │  (plain text)    │
+                           └──────────────────┘
+
+
+ ┌─────────────────────────────────────────────────────────────────────────┐
+ │  OPENAI API CALL SUMMARY                                                │
+ ├────────┬──────────────────────────┬───────────────┬─────────────────── │
+ │  Call  │  Model                   │  When         │  Purpose            │
+ ├────────┼──────────────────────────┼───────────────┼─────────────────── │
+ │  1     │  text-embedding-3-small  │  Build only   │  Embed all chunks   │
+ │  2     │  text-embedding-3-small  │  Each query   │  Embed question     │
+ │  3     │  gpt-4o-mini             │  Each query   │  Generate answer    │
+ └────────┴──────────────────────────┴───────────────┴─────────────────── ┘

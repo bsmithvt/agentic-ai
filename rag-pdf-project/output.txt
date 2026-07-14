@@ -1,0 +1,97 @@
+Loading existing FAISS index from '/Users/bsmith/Documents/AI Training/vt_agentic_ai/4 - llm_internals/project/faiss_index'...
+
+Building RAG chain
+
+============================================================
+Question: What is the role of a firewall in network security?
+============================================================
+
+Top 3 retrieved chunk(s):
+  [1] score=0.9362 | network_security_manual.pdf — page 0
+       "guide to designing, implementing, and maintaining a secure network environment. Topics
+range from fundamental firewall c..."
+  [2] score=1.1187 | network_security_manual.pdf — page 0
+       "adhere to the principle of least privilege: deny all traffic by default and allow only explicitly
+required communication..."
+  [3] score=1.2037 | network_security_manual.pdf — page 0
+       "Zone-based segmentation separates the network into logical regions — DMZ, internal LAN,
+and management plane — each gove..."
+
+Answer:
+A firewall is the first line of defence in any network security architecture. It performs deep packet inspection (DPI), application-layer filtering, and stateful connection tracking. The firewall is configured to deny all traffic by default and allow only explicitly required communication paths, helping to protect the network from unauthorized access.
+
+============================================================
+Question: How much has global sea level risen since 1993?
+============================================================
+
+Top 3 retrieved chunk(s):
+  [1] score=0.7746 | climate_change_report.pdf — page 0
+       "2. Sea Level Rise and Coastal Impacts
+Global mean sea level rose 3.7 mm in 2024, bringing the cumulative rise since 1993..."
+  [2] score=1.1786 | climate_change_report.pdf — page 0
+       "compounding risks from sea-level rise, storm surge intensification, and saltwater intrusion into
+freshwater aquifers. Th..."
+  [3] score=1.1922 | climate_change_report.pdf — page 0
+       "fossil-fuel combustion and land-use change, partially offset by natural carbon sinks.
+Permafrost thaw in Arctic regions..."
+
+Answer:
+Global mean sea level has risen approximately 112 mm since 1993.
+
+============================================================
+Question: What is the difference between an IDS and an IPS?
+============================================================
+
+Top 3 retrieved chunk(s):
+  [1] score=0.9122 | network_security_manual.pdf — page 0
+       "Zone-based segmentation separates the network into logical regions — DMZ, internal LAN,
+and management plane — each gove..."
+  [2] score=1.0995 | network_security_manual.pdf — page 1
+       "Anomaly-based detection establishes a baseline of normal network behaviour and alerts on
+deviations. While more effectiv..."
+  [3] score=1.2362 | network_security_manual.pdf — page 1
+       "inspect north-south traffic, while lateral sensor deployment captures east-west flows between
+internal segments — a comm..."
+
+Answer:
+An Intrusion Detection System (IDS) monitors network traffic for signatures of known attacks and anomalous behaviour patterns, while an Intrusion Prevention System (IPS) extends this capability by actively preventing detected threats.
+
+============================================================
+Question: How does the transformer architecture handle long-range dependencies?
+============================================================
+
+Top 3 retrieved chunk(s):
+  [1] score=1.2197 | ml_fundamentals_guide.pdf — page 1
+       "to iteratively update weights. Batch normalisation, dropout, and residual connections address
+training instability and v..."
+  [2] score=1.3304 | ml_fundamentals_guide.pdf — page 1
+       "model to capture long-range dependencies without the sequential bottleneck of recurrent
+networks.
+4. Model Evaluation an..."
+  [3] score=1.3892 | ml_fundamentals_guide.pdf — page 2
+       "adjacent chunks.
+Embedding model choice affects both retrieval precision and computational cost. OpenAI's
+text-embedding..."
+
+Answer:
+The transformer architecture handles long-range dependencies by using the self-attention mechanism, which computes pairwise relationships between all tokens in a sequence, enabling the model to capture these dependencies without the sequential bottleneck of recurrent networks.
+
+============================================================
+Question: What chunking strategies are recommended for RAG pipelines?
+============================================================
+
+Top 3 retrieved chunk(s):
+  [1] score=0.8976 | ml_fundamentals_guide.pdf — page 2
+       "Chunking strategy critically affects retrieval quality. Fixed-size character windows are simple
+but may split sentences..."
+  [2] score=1.0018 | ml_fundamentals_guide.pdf — page 2
+       "adjacent chunks.
+Embedding model choice affects both retrieval precision and computational cost. OpenAI's
+text-embedding..."
+  [3] score=1.1169 | ml_fundamentals_guide.pdf — page 1
+       "5. Retrieval-Augmented Generation
+Retrieval-Augmented Generation (RAG) combines a dense retrieval system with a large
+la..."
+
+Answer:
+The recommended chunking strategies for RAG pipelines include fixed-size character windows, sentence or paragraph-level chunking, and recursive character text splitters. Fixed-size character windows are simple but may split sentences mid-thought. Sentence or paragraph-level chunking respects linguistic boundaries but produces variable-length chunks. Recursive character text splitters attempt to split on paragraph, then sentence, then word boundaries, balancing coherence and uniformity. Additionally, chunk overlap—repeating tokens at boundaries—helps preserve context across adjacent chunks.

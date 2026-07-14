@@ -1,0 +1,7 @@
+reportlab
+langchain
+langchain-community
+langchain-openai
+faiss-cpu
+openai
+pypdf

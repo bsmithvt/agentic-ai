@@ -1,0 +1,12 @@
+# Ignore everything by default
+*
+
+# Un-ignore directories (the leading ! means "do not ignore")
+!python-refresher/
+!python-refresher/**
+
+# Un-ignore this .gitignore itself
+!.gitignore
+
+!rag-pdf-project/
+!rag-pdf-project/**
