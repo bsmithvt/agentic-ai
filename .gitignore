@@ -8,6 +8,9 @@
 !rag-pdf-project/
 !rag-pdf-project/**
 
+!rag-multi-agent/
+!rag-multi-agent/**
+
 # Un-ignore this .gitignore itself
 !.gitignore
 
@@ -18,4 +21,8 @@
 **/*.pyo
 **/.claude/
 **/faiss_index/
+**/chroma_db/
+**/.chroma/
 **/*.zip
+**/.env
+**/.venv/

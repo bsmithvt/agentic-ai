@@ -1,0 +1,4 @@
+crewai[tools]==1.15.4
+crewai-tools==1.15.4
+tavily-python==0.7.26
+python-dotenv==1.2.2
